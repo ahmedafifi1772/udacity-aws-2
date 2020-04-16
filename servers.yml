@@ -63,14 +63,15 @@ Resources:
           apt-get install apache2 -y
           systemctl start apache2.service
           cd /var/www/html
-          echo "Udacity Demo Web Server Up and Running!" > index.html
-      ImageId: ami-005bdb005fb00e791
+          aws s3 cp s3://cloud-project-2/udacity.zip .                                         
+          unzip -o udacity.zip
+      ImageId: ami-0d1cd67c26f5fca19 #Ubuntu Server image 
       KeyName: private-webapp
       IamInstanceProfile: 
         Ref: ProfileWithRolesForOurApp
       SecurityGroups:
       - Ref: WebServerSecGroup
-      InstanceType: t3.medium
+      InstanceType: t3.small
       BlockDeviceMappings:
       - DeviceName: "/dev/sdk"
         Ebs:
@@ -136,4 +137,4 @@ Resources:
 Outputs:
   LoadBalancerDNSName:
     Description: The DNSName of the load balancer
-    Value: !GetAtt WebAppLB.DNSName
+    Value: !Join ["", [ "http://" , !GetAtt WebAppLB.DNSName] ]
