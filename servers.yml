@@ -60,13 +60,14 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash
           apt-get update -y
-          apt-get install apache2 -y
-          systemctl start apache2.service
+          apt install -y awscli apache2 unzip
+          snap install amazon-ssm-agent --classic
+          systemctl start snap.amazon-ssm-agent.amazon-ssm-agent.service
           cd /var/www/html
           aws s3 cp s3://cloud-project-2/udacity.zip .                                         
-          unzip -o udacity.zip
+          unzip -o udacity.zip                                    
+          systemctl start apache2.service
       ImageId: ami-0d1cd67c26f5fca19 #Ubuntu Server image 
-      KeyName: private-webapp
       IamInstanceProfile: 
         Ref: ProfileWithRolesForOurApp
       SecurityGroups:
